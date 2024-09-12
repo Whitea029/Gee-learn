@@ -15,11 +15,8 @@ type Context struct {
 	Method     string
 	Params     map[string]string
 	StatusCode int
-}
-
-func (c *Context) Param(key string) string {
-	value, _ := c.Params[key]
-	return value
+	handles    []HandlerFunc
+	index      int
 }
 
 func newContext(w http.ResponseWriter, r *http.Request) *Context {
@@ -28,7 +25,13 @@ func newContext(w http.ResponseWriter, r *http.Request) *Context {
 		Req:    r,
 		Path:   r.URL.Path,
 		Method: r.Method,
+		index:  -1,
 	}
+}
+
+func (c *Context) Param(key string) string {
+	value, _ := c.Params[key]
+	return value
 }
 
 func (c *Context) PostForm(key string) string {
@@ -72,4 +75,18 @@ func (c *Context) HTML(code int, html string) {
 	c.SetHeader("Content-Type", "text/html; charset=utf-8")
 	c.Stauts(code)
 	c.Writer.Write([]byte(html))
+}
+
+func (c *Context) Next() {
+	c.index++
+	s := len(c.handles)
+	for ; c.index < s; c.index++ {
+		c.handles[c.index](c)
+	}
+}
+
+func (c *Context) Fail(code int, msg string) {
+	c.StatusCode = code
+	c.Writer.WriteHeader(code)
+	c.Writer.Write([]byte(msg))
 }

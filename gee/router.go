@@ -81,5 +81,5 @@ func (r *router) handle(c *Context) {
 	} else {
 		c.String(http.StatusNotFound, "404 page not found: %s\n", c.Path)
 	}
-
+	c.Next()
 }
