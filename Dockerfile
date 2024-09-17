@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM golang:1.20 AS builder
 LABEL authors="Whitea"
 
 WORKDIR /app
