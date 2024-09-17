@@ -43,12 +43,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and push Docker image
-        run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/myapp:${{ github.sha }} .
-          docker push ${{ secrets.DOCKER_USERNAME }}/myapp:${{ github.sha }}
-          
-      - name: Tag Docker image as latest
-        if: github.ref == 'refs/heads/main'
-        run: |
-          docker tag ${{ secrets.DOCKER_USERNAME }}/myapp:${{ github.sha }} ${{ secrets.DOCKER_USERNAME }}/myapp:latest
-          docker push ${{ secrets.DOCKER_USERNAME }}/myapp:latest
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: gee-demo:latest
