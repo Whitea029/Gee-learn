@@ -1,0 +1,12 @@
+FROM ubuntu:latest
+LABEL authors="Whitea"
+
+WORKDIR /app
+COPY go.mod go.sum ./
+RUN go mod download
+COPY . .
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o myapp ./cmd/myapp
+FROM gcr.io/distroless/base-debian10
+COPY --from=builder /app/myapp /myapp
+EXPOSE 8080
+CMD ["/myapp"]
