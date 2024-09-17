@@ -20,7 +20,6 @@ func main() {
 	r.Use(gee.Logger())
 
 	v2 := r.Group("/v2")
-	v2.Use(onlyForV2())
 	{
 		v2.GET("/hello/:name", func(c *gee.Context) {
 			c.String(http.StatusOK, "hello %s, you're at %s\n", c.Param("name"), c.Path)
