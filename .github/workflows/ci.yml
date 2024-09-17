@@ -46,4 +46,4 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: gee-demo:latest
+          tags: whitea0029/gee-demo:latest
